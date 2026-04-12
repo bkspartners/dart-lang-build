@@ -22,9 +22,15 @@ final _runningDartSdkPath = p.dirname(p.dirname(Platform.resolvedExecutable));
 
 /// Path where the dart:ui package will be found, if executing via the dart
 /// binary provided by the Flutter SDK.
-final _dartUiPath = p.normalize(
-  p.join(_runningDartSdkPath, '..', 'pkg', 'sky_engine', 'lib'),
-);
+final _dartUiPath = () {
+  final flutterRoot = Platform.environment['FLUTTER_ROOT'];
+  if (flutterRoot != null) {
+    return p.join(flutterRoot, 'bin', 'cache', 'pkg', 'sky_engine', 'lib');
+  }
+  return p.normalize(
+    p.join(_runningDartSdkPath, '..', 'pkg', 'sky_engine', 'lib'),
+  );
+}();
 
 /// Lazily creates a summary of the users SDK and caches it under
 /// `.dart_tool/build_resolvers`.
